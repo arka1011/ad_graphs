@@ -3,12 +3,37 @@
 
 using namespace std;
 
-bool dfs(int st, vector<vector<int>>& adj, vector<bool>& recStack) {
+bool dfs(int st, vector<vector<int>>& adj, vector<bool>& visited, vector<bool>& recStack) {
+    visited[st] = true;
+    recStack[st] = true;
 
+    for (int n:adj[st]) {
+        if (!visited[n]) {
+            if (dfs(n,adj,visited,recStack)) {
+                return true;
+            }
+        } else if (recStack[n]) {
+            return true;
+        }
+    }
+
+    recStack[st] = false;
+    return false;
 }
 
 bool hasCycle(vector<vector<int>>& adj) {
+    int V = adj.size();
+    vector<bool> visited(V,false);
+    vector<bool> recStack(V,false);
 
+    for (int i=0; i<V; i++) {
+        if (!visited[i]) {
+            if (dfs(i,adj,visited,recStack)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 int main() {
